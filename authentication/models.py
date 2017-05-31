@@ -2,21 +2,38 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth import User
 
 # Create your models here.
 
 class Record(models.Model):
-	time_ceated = models.DateTimeField(auto_now_add = True)
-	last_modified = models.DateTimeField(auto_now = True)
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
 	
 	class Meta:
 		abstract = True
 
-class Client(Record):
-	name = models.CharField(max_length = 50)
-	email = models.EmailField()
-	token = models.CharField(max_length = 20)
+class Client(Record, User):
+	token = models.CharField(max_length=10)
 
-class Client_Request(Record):
+"""base User model contains following fields:
+
+username - required
+password - required
+first_name
+last_name
+email
+groups
+user_permissions
+is_staff
+is_active
+is_superuser
+last_login
+date_joined
+
+"""
+	
+class ClientRequest(Record):
 	message = models.TextField()
-	name = models.ForeignKey('Client')
+	client = models.ForeignKey('Client')
+	response = models.TextField(blank=True)
